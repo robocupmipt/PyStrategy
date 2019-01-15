@@ -11,13 +11,13 @@ class Strategy(object):
 
     def test(self):
         self.motion.SetHeadHorizontalAngle(0)
-        self.motion.SetHeadVerticalAngle(-29.5)
+        self.motion.SetHeadVerticalAngle(0.5)
         while True:
 
             b = raw_input()
 
             print self.cv.get_ball_center()
-            print self.cv.get_ball_size()
+            #print self.cv.get_ball_size()
 
     def start(self):
         self.motion.SetHeadHorizontalAngle(0)

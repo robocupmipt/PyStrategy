@@ -2,7 +2,7 @@ from naoqi import ALProxy
 import cv2
 from PIL import Image
 import numpy as np
-
+import time
 
 class CVConnector(object):
     def __init__(self, ip, ballfinder_dir='top_cascade.xml',
@@ -40,7 +40,7 @@ class CVConnector(object):
         imageHeight = naoImage[1]
         array = naoImage[6]
         im = Image.frombytes("RGB", (imageWidth, imageHeight), str(array))
-        self.last_image = cv2.cvtColor(np.asarray(im),cv2.COLOR_RGB2BGR)
+        self.last_image = cv2.cvtColor(np.asarray(im), cv2.COLOR_RGB2BGR)
 
     def _get_ball(self, get_image=True,
                   scale_factor=1,
@@ -96,18 +96,19 @@ class CVConnector(object):
     def get_ball_center(self):
         ball_coords = self._get_ball()
         if ball_coords is None or len(ball_coords) == 0:
+            cv2.imwrite("images/BAD_IMAGE_{}.jpg".format(time.time()), self.last_image)
             return None, None
 
         x, y, w, h = ball_coords[0]
         center_x = x + w//2
         center_y = y + h//2
         return center_x, center_y
-    
+
     def get_ball_size(self):
         ball_coords = self._get_ball()
 
         if ball_coords is None or len(ball_coords)==0:#no balls
-            return [None,None]
+            return [None, None]
         x, y, w, h = ball_coords[0]
         return w, h
 
