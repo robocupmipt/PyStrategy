@@ -42,14 +42,14 @@ class MovementConnector(ModuleConnector):
 
     def SetHeadVerticalAngle(self, angle):
         try:
-            self.proxy.SetHeadVerticalAngle()
+            self.proxy.SetHeadVerticalAngle(angle)
         except RuntimeError:
             self.eprint()
             return False
 
     def SetHeadHorizontalAngle(self, angle):
         try:
-            self.proxy.SetHeadHorizontalAngle()
+            self.proxy.SetHeadHorizontalAngle(angle)
         except RuntimeError:
             self.eprint()
             return False

@@ -9,6 +9,16 @@ class Strategy(object):
         self.FIRST_MAGIC_CONST = 1
         self.SECOND_MAGIC_CONST = 0.3
 
+    def test(self):
+        self.motion.SetHeadHorizontalAngle(0)
+        self.motion.SetHeadVerticalAngle(-29.5)
+        while True:
+
+            b = raw_input()
+
+            print self.cv.get_ball_center()
+            print self.cv.get_ball_size()
+
     def start(self):
         self.motion.SetHeadHorizontalAngle(0)
         self.motion.SetHeadVerticalAngle(-29.5)
@@ -28,10 +38,8 @@ class Strategy(object):
             else:
                 self.motion.LeftKick()
 
-
     def head_to_ball(self):
         pass
-
 
     def try_find_ball(self):
         v_angles = [ 38.5,   38.5,  -29.5, -29.5]
@@ -46,4 +54,7 @@ class Strategy(object):
 
 
 def main():
-    pass
+    a = Strategy("192.168.1.5")
+    a.test()
+
+main()

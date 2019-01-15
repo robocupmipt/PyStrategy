@@ -1,4 +1,5 @@
 import sys
+import traceback
 from naoqi import ALProxy
 
 
@@ -24,5 +25,4 @@ class ModuleConnector(object):
         return True
 
     def eprint(self):
-        print("Oooops")
-        #sys.stderr.write(sys.exc_info()[0])
+        print("ERROR:", traceback.format_exc())
