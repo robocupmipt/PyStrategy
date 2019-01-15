@@ -2,7 +2,7 @@ from MovementConnector import MovementConnector
 from CVConnector import CVConnector
 
 
-class Stratagy(object):
+class Strategy(object):
     def __init__(self, IP):
         self.motion = MovementConnector(IP)
         self.cv = CVConnector(IP)
@@ -28,3 +28,4 @@ class Stratagy(object):
                 return True
 
 def main():
+    pass
