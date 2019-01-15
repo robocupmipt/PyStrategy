@@ -85,7 +85,7 @@ class CVConnector(object):
         balls = balls[:num_balls]
         for (x, y, w, h) in balls:
             image1 = cv2.rectangle(image1, (x,y),(x+w,y+h),(255,0,0),2)
-
+            self.last_shape=image1.shape
         if save_image:
             cv2.imwrite(save_dir, image1)
 
@@ -109,7 +109,7 @@ class CVConnector(object):
         cv2.rectangle(img,
                       (x, y), (x + w, y + h),
                       (255, 0, 0), 2)
-        image_h, image_w = img.shape[:2]
+        image_h, image_w = self.last_shape[:2]
 
         cv2.imwrite("images/good/{}.jpg".format(time.time()), img)
 
