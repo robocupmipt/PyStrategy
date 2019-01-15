@@ -49,7 +49,7 @@ class CVConnector(object):
             if im is None:
                 print('IMAGE TAKING FAILED')
             self.last_image = cv2.cvtColor(np.asarray(im), cv2.COLOR_RGB2BGR)
-
+            self.last_shape=self.last_image.shape
     def _get_ball(self, get_image=True,
                   scale_factor=1,
                   haar_params=(1.3, 5),
