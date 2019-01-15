@@ -1,9 +1,10 @@
-from naoqi import ALProxy
+
+import time
 import cv2
 from PIL import Image, ImageDraw
 import numpy as np
 import time
-
+from naoqi import ALProxy
 class CVConnector(object):
     def __init__(self, ip, 
                  ballfinder_dirs=['top_cascade.xml','other_cascade.xml','bottom_cascade.xml'],
@@ -35,6 +36,7 @@ class CVConnector(object):
         #video = ses.service('ALVideoDevice')
         if image_dir:
             self.last_image = cv2.imread(image_dir)
+            self.last_shape=self.last_image.shape
         else:
             video = ALProxy('ALVideoDevice', self.IP, self.PORT)
             videoClient = video.subscribeCamera("python_client",
@@ -85,7 +87,8 @@ class CVConnector(object):
         balls = balls[:num_balls]
         for (x, y, w, h) in balls:
             image1 = cv2.rectangle(image1, (x,y),(x+w,y+h),(255,0,0),2)
-            self.last_shape=image1.shape
+            if image1 is not None:
+                self.last_shape=image1.shape
         if save_image:
             cv2.imwrite(save_dir, image1)
 
@@ -121,3 +124,12 @@ class CVConnector(object):
         center_y = y + h // 2 - image_h // 2
         return center_x, center_y, w, h
 
+#import os
+#coords=[]
+#conn = CVConnector(ip='')
+ # папке good, в которой есть все 3 классификатора
+#for filename in os.listdir(os.getcwd()):
+#    if '.jpg' in filename:
+#        conn.get_image(filename)
+#        coords.append(conn._get_ball(get_image=False,print_=True,save_image=True,
+#                                     save_dir=filename))
