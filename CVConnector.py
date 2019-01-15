@@ -5,7 +5,9 @@ import numpy as np
 import time
 
 class CVConnector(object):
-    def __init__(self, ip, ballfinder_dir='top_cascade.xml',
+    def __init__(self, ip, 
+                 ballfinder_dirs=['top_cascade.xml','bottom_cascade.xml',
+                 'other_cascade.xml'],
                  camera_id=1):
         '''
         ballfinder_dir - directory of classifier
@@ -15,7 +17,8 @@ class CVConnector(object):
         '''
         self.IP = ip
         self.PORT = 9559
-        self.ballfinder= cv2.CascadeClassifier(ballfinder_dir)
+        self.ballfinders= [cv2.CascadeClassifier(ballfinder_dir)
+        for ballfinder_dir in ballfinder_dirs]
         self.camera_id = camera_id
         self.last_image=None
 
@@ -68,10 +71,17 @@ class CVConnector(object):
             return None
 
         try:
-            balls = self.ballfinder.detectMultiScale(
+            balls = [scale_factor*ballfinder.detectMultiScale(
                     image1, haar_params[0],haar_params[1])
+                    for ballfinder in self.ballfinders]
+            balls=[j for j in balls if len(j)>0]
+            ans=[[0,0,0,0]]
+            for ball in balls:
+                for i in range(4):
+                    ans[0][i]+=ball[i]
+            for i in range(4):
+                ans[0][i]=ans[0][i]//len(balls)
             #print(balls)
-            balls = scale_factor * balls
         except:
             if print_:
                 print('Exception while applying cascade')
