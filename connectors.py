@@ -80,6 +80,20 @@ class MovementConnector(ModuleConnector):
             self.eprint()
             return False
 
+    def ToInit(self):
+        try:
+            self.proxy.ToInit()
+        except RuntimeError:
+            self.eprint()
+            return False
+
+    def LookDown(self, level):
+        try:
+            self.proxy.LookDown(level)
+        except RuntimeError:
+            self.eprint()
+            return False
+
 
 class MotionConnector(ModuleConnector):
     def __init__(self, ip):
@@ -125,3 +139,6 @@ class MotionConnector(ModuleConnector):
         self.proxy.angleInterpolation(['LHipPitch', 'LKneePitch', 'LAnklePitch'],
                                         [-0.5, 1.1, -0.65],
                                         [[0.25], [0.25], [0.25]], True)
+
+    def StandUp(self):
+        self.proxy.wakeUp()

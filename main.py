@@ -22,46 +22,25 @@ class Strategy(object):
         self.F = 600
 
     def test(self):
-        self.motion.SetHeadHorizontalAngle(0)
-        self.motion.SetHeadVerticalAngle(0)
-        self.standard_motion.RightKick()
-
-    def start2(self):
-
-        while True:
-            while not self.grid_search():
-                continue
-
-            angle = self.get_ball_angle()
-            print(angle)
-
-            self.motion.Move(0, 0, angle)
-
-            self.motion.SetHeadHorizontalAngle(0)
-            self.motion.SetHeadVerticalAngle(0)
-            self.motion.Move(0.5, 0, 0)
-
-
-
+        self.update_ball_data()
 
     def start(self):
-        self.motion.SetHeadHorizontalAngle(0)
-        self.motion.SetHeadVerticalAngle(-29.5)
+        self.standard_motion.StandUp()
+
         while True:
-            while not self.cv.is_see_ball():
-                self.motion.Move(2, 0, 0)
+            self.motion.LookDown(0)
 
-            w, h = self.cv.get_ball_size()
-            while w * h >= self.FIRST_MAGIC_CONST:
+            if self.grid_search():
+                angle = self.get_ball_angle()
+                print(angle)
+
+                self.motion.Move(0, 0, angle)
+
+                self.motion.SetHeadHorizontalAngle(0)
+                self.motion.SetHeadVerticalAngle(0)
                 self.motion.Move(0.5, 0, 0)
-
-            x, y = self.cv.get_ball_center()
-            self.motion.Move(self.SECOND_MAGIC_CONST, 0, 0)
-
-            if x >= 0:
-                self.motion.RightKick()
             else:
-                self.motion.LeftKick()
+                self.motion.Move(1, 0, 0)
 
     def grid_search(self):
         self.motion.SetHeadHorizontalAngle(0)
@@ -116,7 +95,7 @@ class Strategy(object):
 
 def main():
     a = Strategy("192.168.1.5")
-    a.test()
-    #a.start2()
+    #a.test()
+    a.start()
 
 main()
