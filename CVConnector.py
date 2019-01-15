@@ -1,6 +1,6 @@
 from naoqi import ALProxy
 import cv2
-from PIL import Image
+from PIL import Image, ImageDraw
 import numpy as np
 import time
 
@@ -46,6 +46,8 @@ class CVConnector(object):
             imageHeight = naoImage[1]
             array = naoImage[6]
             im = Image.frombytes("RGB", (imageWidth, imageHeight), str(array))
+            if im is None:
+                print('IMAGE TAKING FAILED')
             self.last_image = cv2.cvtColor(np.asarray(im), cv2.COLOR_RGB2BGR)
 
     def _get_ball(self, get_image=True,
@@ -78,38 +80,44 @@ class CVConnector(object):
             if len(balls)==0:
                 balls_found = scale_factor*ballfinder.detectMultiScale(
                     image1, haar_params[0],haar_params[1])
-                balls=balls_found
-        balls=balls[:num_balls]
-        for (x,y,w,h) in balls:
+                balls = balls_found
+
+        balls = balls[:num_balls]
+        for (x, y, w, h) in balls:
             image1 = cv2.rectangle(image1, (x,y),(x+w,y+h),(255,0,0),2)
+
         if save_image:
             cv2.imwrite(save_dir, image1)
+
         if len(balls)==0:
             if print_:
                 print('No balls found - returning empty')
                 #raise Exception
             return None
         
-        return balls
+        return balls[0]
 
-    def get_ball_center(self):
+    def get_all_ball_data(self):
         ball_coords = self._get_ball()
         if ball_coords is None or len(ball_coords) == 0:
-            cv2.imwrite("images/BAD_IMAGE_{}.jpg".format(time.time()), self.last_image)
-            return None, None
-        x, y, w, h = ball_coords[0]
-        center_x = x + w//2
-        center_y = y + h//2
-        return center_x, center_y
+            cv2.imwrite("images/bad/{}.jpg".format(time.time()), self.last_image)
+            return None, None, None, None
 
-    def get_ball_size(self):
-        ball_coords = self._get_ball()
 
-        if ball_coords is None or len(ball_coords)==0:#no balls
-            return [None, None]
-        x, y, w, h = ball_coords[0]
-        return w, h
+        x, y, w, h = ball_coords
+        img = self.last_image
+        cv2.rectangle(img,
+                      (x, y), (x + w, y + h),
+                      (255, 0, 0), 2)
+        image_h, image_w = img.shape[:2]
 
-    def is_see_ball(self):
-        ball_coords = self._get_ball()
-        return ball_coords is not None
+        cv2.imwrite("images/good/{}.jpg".format(time.time()), img)
+
+        print("DEBUG: " + str(ball_coords))
+        print("DEBUF: " + str(img.shape[:2]))
+
+        y = image_h - y
+        center_x = x + w // 2 - image_w // 2
+        center_y = y + h // 2 - image_h // 2
+        return center_x, center_y, w, h
+
