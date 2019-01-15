@@ -1,10 +1,14 @@
-from MovementConnector import MovementConnector
+from connectors import MotionConnector
+from connectors import MovementConnector
 from CVConnector import CVConnector
 import time
 
+
 class Strategy(object):
     def __init__(self, IP):
+        self.IP = IP
         self.motion = MovementConnector(IP)
+        self.standard_motion = MotionConnector(IP)
         self.cv = CVConnector(IP)
         self.FIRST_MAGIC_CONST = 1
         self.SECOND_MAGIC_CONST = 0.3
@@ -20,24 +24,22 @@ class Strategy(object):
     def test(self):
         self.motion.SetHeadHorizontalAngle(0)
         self.motion.SetHeadVerticalAngle(0)
-        while True:
-
-            b = raw_input()
-
-            self.update_ball_data()
-            print(self.x, self.y)
+        self.standard_motion.RightKick()
 
     def start2(self):
-        self.motion.SetHeadHorizontalAngle(0)
-        self.motion.SetHeadVerticalAngle(0)
 
-        while not self.grid_search():
-            continue
+        while True:
+            while not self.grid_search():
+                continue
 
-        angle = self.get_ball_angle()
-        print(angle)
+            angle = self.get_ball_angle()
+            print(angle)
 
-        #self.motion.Move(0, 0, angle / 180 * 3.1415)
+            self.motion.Move(0, 0, angle)
+
+            self.motion.SetHeadHorizontalAngle(0)
+            self.motion.SetHeadVerticalAngle(0)
+            self.motion.Move(0.5, 0, 0)
 
 
 
@@ -65,20 +67,18 @@ class Strategy(object):
         self.motion.SetHeadHorizontalAngle(0)
         self.motion.SetHeadVerticalAngle(0)
 
-        leftHorizontalBound = -60
-        rightHorizontalBound = 60
+        horizontal_range = 60
+        dir_sign = 1
 
         bottomVerticalBound = -5
         topVerticalBound = 20
 
         self.head_y = bottomVerticalBound
-        self.head_x = leftHorizontalBound
-
         while self.head_y < topVerticalBound:
             self.motion.SetHeadVerticalAngle(self.head_y)  # set vertical angle
 
-
-            while self.head_x < rightHorizontalBound:
+            self.head_x = -horizontal_range * dir_sign
+            while dir_sign * self.head_x - horizontal_range <= 0:
                 self.motion.SetHeadHorizontalAngle(self.head_x )  # set horizontal angle
                 time.sleep(0.1)
                 self.update_ball_data()
@@ -86,8 +86,9 @@ class Strategy(object):
                 if self.is_see_ball():
                     print("Find ball in " + str((self.x, self.y)))
                     return True
-                self.head_x += 10
+                self.head_x += dir_sign * 10
             self.head_y += 8
+            dir_sign *= -1
 
         return False
 

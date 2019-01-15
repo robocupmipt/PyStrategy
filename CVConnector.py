@@ -123,13 +123,3 @@ class CVConnector(object):
         center_x = x + w // 2 - image_w // 2
         center_y = y + h // 2 - image_h // 2
         return center_x, center_y, w, h
-
-#import os
-#coords=[]
-#conn = CVConnector(ip='')
- # папке good, в которой есть все 3 классификатора
-#for filename in os.listdir(os.getcwd()):
-#    if '.jpg' in filename:
-#        conn.get_image(filename)
-#        coords.append(conn._get_ball(get_image=False,print_=True,save_image=True,
-#                                     save_dir=filename))
