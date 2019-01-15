@@ -97,7 +97,7 @@ class CVConnector(object):
         if ball_coords is None or len(ball_coords) == 0:
             cv2.imwrite("images/BAD_IMAGE_{}.jpg".format(time.time()), self.last_image)
             return None, None
-        x, y, w, h = ball_coords
+        x, y, w, h = ball_coords[0]
         center_x = x + w//2
         center_y = y + h//2
         return center_x, center_y
@@ -107,7 +107,7 @@ class CVConnector(object):
 
         if ball_coords is None or len(ball_coords)==0:#no balls
             return [None, None]
-        x, y, w, h = ball_coords
+        x, y, w, h = ball_coords[0]
         return w, h
 
     def is_see_ball(self):
