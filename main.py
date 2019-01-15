@@ -34,8 +34,8 @@ class Strategy(object):
 
 
     def try_find_ball(self):
-        v_angles = [38.5, 38.5, -29.5, -29.5]
-        h_angles = [119.5, -119.5, 119.5, -119.5]
+        v_angles = [ 38.5,   38.5,  -29.5, -29.5]
+        h_angles = [119.5, -119.5, -119.5, 119.5]
 
         for h, v in zip(h_angles, v_angles):
             self.motion.SetHeadHorizontalAngle(h)
