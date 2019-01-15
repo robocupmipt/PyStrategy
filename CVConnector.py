@@ -103,18 +103,18 @@ class CVConnector(object):
     def get_all_ball_data(self):
         ball_coords = self._get_ball()
         if ball_coords is None or len(ball_coords) == 0:
-            cv2.imwrite("images/bad/{}.jpg".format(time.time()), self.last_image)
+            #cv2.imwrite("images/bad/{}.jpg".format(time.time()), self.last_image)
             return None, None, None, None
 
 
         x, y, w, h = ball_coords
         img = self.last_image
-        cv2.rectangle(img,
-                      (x, y), (x + w, y + h),
-                      (255, 0, 0), 2)
+        #cv2.rectangle(img,
+        #              (x, y), (x + w, y + h),
+        #              (255, 0, 0), 2)
         image_h, image_w = self.last_shape[:2]
 
-        cv2.imwrite("images/good/{}.jpg".format(time.time()), img)
+        #cv2.imwrite("images/good/{}.jpg".format(time.time()), img)
 
         print("DEBUG: " + str(ball_coords))
         print("DEBUF: " + str(img.shape[:2]))
