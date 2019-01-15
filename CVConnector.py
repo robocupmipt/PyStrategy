@@ -75,9 +75,9 @@ class CVConnector(object):
             return None
         balls=[]
         for ballfinder in self.ballfinders:
-            balls_found = scale_factor*ballfinder.detectMultiScale(
-                    image1, haar_params[0],haar_params[1])
             if len(balls)==0:
+                balls_found = scale_factor*ballfinder.detectMultiScale(
+                    image1, haar_params[0],haar_params[1])
                 balls=balls_found
         balls=balls[:num_balls]
         for (x,y,w,h) in balls:
