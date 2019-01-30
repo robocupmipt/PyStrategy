@@ -65,7 +65,7 @@ class CVConnector(object):
         haar_params are params for ball finder
         if save_image=True, we save image after detection in save_dir.
         '''
-        if get_image or self.last_image is not None:
+        if get_image or (self.last_image is None):
             self.get_image()
 
         try:
