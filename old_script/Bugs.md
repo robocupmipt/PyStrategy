@@ -1,6 +1,3 @@
-nao_strategy
-Everything connected with NAO playing strategy.
-
 BUGS:
 1) motion.setAngles("HeadPitch",pitch,speed)
 
